@@ -24,8 +24,13 @@ class Player():
             print(item, '\n')
 
     def move(self, dx, dy):
-        self.location_x += dx
-        self.location_y += dy
+        new_x = self.location_x + dx
+        new_y = self.location_y + dy
+        if world.tile_exists(new_x, new_y) is None:
+            print("You can't go that way.")
+            return
+        self.location_x = new_x
+        self.location_y = new_y
         print(world.tile_exists(self.location_x, self.location_y).intro_text())
 
     def move_north(self):
@@ -61,4 +66,3 @@ class Player():
         available_moves = tile.adjacent_moves()
         r = random.randint(0, len(available_moves) - 1)
         self.do_action(available_moves[r])
-

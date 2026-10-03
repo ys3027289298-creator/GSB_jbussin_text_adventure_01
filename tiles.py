@@ -74,7 +74,9 @@ class LootRoom(MapTile):
         super().__init__(x, y)
 
     def add_loot(self, the_player):
-        the_player.inventory.append(self.item)
+        if self.item is not None:
+            the_player.inventory.append(self.item)
+            self.item = None
 
     def modify_player(self, the_player):
         self.add_loot(the_player)
@@ -115,7 +117,7 @@ class EnemyRoom(MapTile):
         if self.enemy.is_alive():
             return [actions.Flee(tile=self), actions.Attack(enemy=self.enemy)]
         else:
-            return self.adjacent_moves()
+            return super().available_actions()
 
 
 class GiantSpiderRoom(EnemyRoom):
@@ -171,4 +173,5 @@ class LeaveCaveRoom(MapTile):
         """
 
     def modify_player(self, player):
-        player.victory = True
+        if any(isinstance(item, items.Dagger) for item in player.inventory):
+            player.victory = True
