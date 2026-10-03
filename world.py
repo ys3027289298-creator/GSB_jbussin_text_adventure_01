@@ -1,7 +1,9 @@
 __author__ = 'Phillip Johnson'
+import os
 
 _world = {}
 starting_position = (0, 0)
+MAP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources', 'map.txt')
 
 def tile_exists(x, y):
         """Returns the tile at the given coordinates or None if there is no tile.
@@ -15,7 +17,8 @@ def tile_exists(x, y):
 
 def load_tiles():
     """Parses a file that describes the world space into the _world object"""
-    with open('resources/map.txt', 'r') as f:
+    _world.clear()
+    with open(MAP_PATH, 'r') as f:
         rows = f.readlines()
     x_max = len(rows[0].split('\t'))
     for y in range(len(rows)):
@@ -26,5 +29,3 @@ def load_tiles():
                 global starting_position
                 starting_position = (x, y)
             _world[(x, y)] = None if tile_name == '' else getattr(__import__('tiles'), tile_name)(x, y)
-
-

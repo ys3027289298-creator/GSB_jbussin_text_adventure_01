@@ -24,9 +24,15 @@ class Player():
             print(item, '\n')
 
     def move(self, dx, dy):
-        self.location_x += dx
-        self.location_y += dy
-        print(world.tile_exists(self.location_x, self.location_y).intro_text())
+        new_x = self.location_x + dx
+        new_y = self.location_y + dy
+        destination = world.tile_exists(new_x, new_y)
+        if destination is None:
+            print("You can't go that way.")
+            return
+        self.location_x = new_x
+        self.location_y = new_y
+        print(destination.intro_text())
 
     def move_north(self):
         self.move(dx=0, dy=-1)
@@ -41,6 +47,9 @@ class Player():
         self.move(dx=-1, dy=0)
 
     def attack(self, enemy):
+        if not enemy.is_alive():
+            print("{} is already dead.".format(enemy.name))
+            return
         best_weapon = None
         max_dmg = 0
         for i in self.inventory:
@@ -61,4 +70,3 @@ class Player():
         available_moves = tile.adjacent_moves()
         r = random.randint(0, len(available_moves) - 1)
         self.do_action(available_moves[r])
-
